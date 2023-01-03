@@ -33,9 +33,11 @@ public class Main {
 
             String[] splited = null;
             inFile = new File(args[0]);
+
             try {
                 BufferedReader br = new BufferedReader(new FileReader(inFile));
                 String read = null;
+
                 String[] data;
                 EmployeeController empCont =new EmployeeController();
 
