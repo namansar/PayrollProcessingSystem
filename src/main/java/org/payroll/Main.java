@@ -30,6 +30,7 @@ public class Main {
 
         File inFile = null;
         if(args.length>0) {
+
             String[] splited = null;
             inFile = new File(args[0]);
             try {
