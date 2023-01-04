@@ -102,6 +102,7 @@ public class EmployeeController {
         //Monthly salary report in following format
         // Month, Total Salary, Total employees
         int totalEmployees = totalEmployees();
+        employeeService.findMontlySalaryReport();
         //Dec 22 - 55556565665 - 500
         //Dec 21 - 45669488554 - 450
 

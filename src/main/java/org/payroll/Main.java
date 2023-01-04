@@ -36,6 +36,7 @@ public class Main {
                 empCont.findAllDeatils();
                 empCont.employeeWiseFinancialReport();
                 empCont.findAllOnBoarded();
+                empCont.monthlySalaryReport();
 
 
             } catch (IOException e) {

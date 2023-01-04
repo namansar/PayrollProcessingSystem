@@ -12,7 +12,7 @@ public class Employee {
     private String EmpLName;
     private String Designation;
     private Date eventDate;
-    private Integer salary;
+    private Integer salary = 0;
     private Integer bonus = 0;
     private Integer reimbursement = 0;
 
