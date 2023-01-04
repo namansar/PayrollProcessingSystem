@@ -1,8 +1,9 @@
 package org.payroll.entity;
 
-public class Events {
-    String Event; // EVENT = SALARY =100000
-    String EventValue; // 10000
+public class Event {
+    String eventEmpId;
+    String Event;
+    String EventValue;
     String notes;
     public String getEventValue() {
         return EventValue;
@@ -22,5 +23,11 @@ public class Events {
     }
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+    public String getEventEmpId() {
+        return eventEmpId;
+    }
+    public void setEventEmpId(String eventEmpId) {
+        this.eventEmpId = eventEmpId;
     }
 }

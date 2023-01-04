@@ -1,8 +1,6 @@
 package org.payroll.entity;
 
-import org.payroll.entity.Events;
-
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 
 public class Employee {
@@ -13,26 +11,22 @@ public class Employee {
     private String EmpFName;
     private String EmpLName;
     private String Designation;
-    private String eventDate;
-
+    private Date eventDate;
     private Integer salary;
+    private Integer bonus = 0;
+    private Integer reimbursement = 0;
 
-    public Integer getSalary() {
-        return salary;
-    }
 
-    public void setSalary(Integer salary) {
-        this.salary = salary;
-    }
 
-    public String getEventDate() {
+
+
+    public Date getEventDate() {
         return eventDate;
     }
-    public void setEventDate(String eventDate) {
+    public void setEventDate(Date eventDate) {
         this.eventDate = eventDate;
     }
-
-    private List<Events> events;
+    private List<Event> events;
 
 
     public int getSequenceNo() {
@@ -66,8 +60,30 @@ public class Employee {
         Designation = designation;
     }
 
-    public void setEvents(List<Events> events) {
+
+    public List<Event> getEvents() {
+        return events;
+    }
+    public void setEvents(List<Event> events) {
         this.events = events;
+    }
+    public Integer getSalary() {
+        return salary;
+    }
+    public void setSalary(Integer salary) {
+        this.salary = salary;
+    }
+    public Integer getBonus() {
+        return bonus;
+    }
+    public void setBonus(Integer bonus) {
+        this.bonus = bonus;
+    }
+    public Integer getReimbursement() {
+        return reimbursement;
+    }
+    public void setReimbursement(Integer reimbursement) {
+        this.reimbursement = reimbursement;
     }
 
 
