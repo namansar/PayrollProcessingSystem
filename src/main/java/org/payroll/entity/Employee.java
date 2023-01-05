@@ -16,9 +16,33 @@ public class Employee {
     private Integer bonus = 0;
     private Integer reimbursement = 0;
 
+    private String eventRecordDate;
+    private String eventRecordValue;
+    private String event;
 
+    public String getEventRecordDate() {
+        return eventRecordDate;
+    }
 
+    public void setEventRecordDate(String eventRecordDate) {
+        this.eventRecordDate = eventRecordDate;
+    }
 
+    public String getEventRecordValue() {
+        return eventRecordValue;
+    }
+
+    public void setEventRecordValue(String eventRecordValue) {
+        this.eventRecordValue = eventRecordValue;
+    }
+
+    public String getEvent() {
+        return event;
+    }
+
+    public void setEvent(String event) {
+        this.event = event;
+    }
 
     public Date getEventDate() {
         return eventDate;

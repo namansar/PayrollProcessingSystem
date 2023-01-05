@@ -7,6 +7,7 @@ import org.payroll.utility.Month;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class EmployeeService {
 
@@ -18,8 +19,6 @@ public class EmployeeService {
     private TreeMap<Month,List<Employee>> monthMap = new TreeMap<>();
     private TreeMap<Integer,TreeMap<Month,List<Employee>>> yearMap = new TreeMap<Integer, TreeMap<Month, List<Employee>>>();
 
-    //ArrayList<Employee> list = new ArrayList<>();
-
     ArrayList<ArrayList<Employee>> monthList = new ArrayList<ArrayList<Employee>>();
 
     //TreeMap<Month, List<Employee>> currentYearMap;
@@ -29,8 +28,8 @@ public class EmployeeService {
     //TODO remove this treeMap and convert to arraylist
     private TreeMap<Date, Employee> monthlyDetails = new TreeMap<>(new Comparator<Date>() {
         public int compare(Date date1, Date date2) {
-            System.out.println("Date1" + date1 + " Date2" + date2);
-            System.out.println(date1.compareTo(date2));
+//            System.out.println("Date1" + date1 + " Date2" + date2);
+//            System.out.println(date1.compareTo(date2));
             return date1.compareTo(date2);
 
         }
@@ -57,8 +56,8 @@ public class EmployeeService {
         int month = localDate.getMonthValue();
         int year = localDate.getYear();
 
-        System.out.println("Month -->" + month);
-        System.out.println("Year -->" + year);
+//        System.out.println("Month -->" + month);
+//        System.out.println("Year -->" + year);
 
         // year map logic
 
@@ -220,18 +219,17 @@ public class EmployeeService {
             default:
                 System.out.println("Please provide proper month");
                 break;
-
         }
-
-
-
 
     }
 
 
     public int TotalEmployees() {
+        System.out.println("----------------------------------------");
         System.out.println("Total number of employees is:" + hm.size());
+        System.out.println("------------------------------------------");
         return hm.size();
+
     }
 
     public List<Employee> findAll() {
@@ -252,6 +250,7 @@ public class EmployeeService {
 
         //TotalAmountPaid = e.getsalary()*12 + e.getBonus() + reimbursment
 
+        System.out.println("----------------------------------------------------------------");
         System.out.println("Employee Id, Name, Surname, Total amount paid");
         for (var entry : hm.entrySet()) {
             int totalpaid = 0;
@@ -262,13 +261,13 @@ public class EmployeeService {
 
             System.out.println(entry.getValue().getEmployeeId() + " " + entry.getValue().getEmpFName()
                     + " " + entry.getValue().getEmpLName() + " " + totalpaid);
-
         }
+        System.out.println("----------------------------------------------------------------");
 
     }
 
     public void findAllOnboarded() {
-//	HashMap<>
+        System.out.println("------------------------------------------------------------------------------");
         for (var entry : monthlyDetails.entrySet()) {
             Event event = entry.getValue().getEvents().get(0);
             if (event.getEvent().trim().equals("ONBOARD")) {
@@ -279,7 +278,7 @@ public class EmployeeService {
                 String name = entry.getValue().getEmpFName();
                 String surname = entry.getValue().getEmpLName();
                 String designation = entry.getValue().getDesignation();
-                System.out.println("onBoarddate: " + onBoarddate + "empid " + empid + " name" + name + "surname " + surname + " designation" + designation);
+                System.out.println("empId " + empid + " name" + name + "surname " + surname + " designation" + designation);
 
                 // printing monthMap
 
@@ -293,12 +292,12 @@ public class EmployeeService {
 
                 System.out.println(entry.getKey()+" "+entry.getValue().get(i).getEmployeeId() + " " + entry.getValue().get(i).getDesignation()
                 + " " + entry.getValue().get(i).getEmpFName() + " " + entry.getValue().get(i).getEmpLName()
-
                 );
-
             }
             System.out.println(" Total Employees onboarded in this month = " + entry.getValue().size());
         }
+
+        System.out.println("-------------------------------------------------------------------------------------------");
     }
 
     public void updateSalaryOfEmployee(String employeeId, Employee e) {
@@ -323,25 +322,296 @@ public class EmployeeService {
     public void findMontlySalaryReport() {
 
         // Month, Total Salary, Total employees
-        System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-        System.out.println("Month,   Year,     Total Salary,    Total employees");
+//        System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+//        System.out.println("Month,   Year,     Total Salary,    Total employees");
+//        for (var entry : yearMap.entrySet()) {
+//            int year = entry.getKey();
+//            TreeMap<Month, List<Employee>> yearMonthlyMap = entry.getValue();
+//            for(Month months : Month.values()){
+//                ArrayList<Employee> empList= (ArrayList<Employee>) yearMonthlyMap.get(months);
+//                int totalSalary = 0;
+//            if(empList.size() > 0) {
+//                for(int i = 0; i < empList.size(); i++){
+//                    totalSalary+= empList.get(i).getSalary();
+//                }
+//            }
+//                if(!(empList.size() == 0))
+//                System.out.println(months + "       " + year + "      "+ totalSalary + "      " + empList.size());
+//            }
+//
+//        }
+
+
+        // last 6 months
+
+        LocalDate currentDate = LocalDate.now();
+        System.out.println("------------------------------------------------------------------------------------");
+        System.out.println(" Each month salary information");
+
+
+        int currentYear = currentDate.getYear();
+        String currentMonth = currentDate.getMonth().toString();
+
+        // last 6 months salary details
+
+        int totalSalary = 0;
+        int totalEmployees = 0;
+
+        // current month report
         for (var entry : yearMap.entrySet()) {
             int year = entry.getKey();
-            TreeMap<Month, List<Employee>> yearMonthlyMap = entry.getValue();
-            for(Month months : Month.values()){
-                ArrayList<Employee> empList= (ArrayList<Employee>) yearMonthlyMap.get(months);
-                int totalSalary = 0;
-            if(empList.size() > 0) {
-                for(int i = 0; i < empList.size(); i++){
-                    totalSalary+= empList.get(i).getSalary();
+            if(year < currentDate.getYear()){
+                TreeMap<Month, List<Employee>> yearMonthlyMap = entry.getValue();
+                for(Month months : Month.values()) {
+                    ArrayList<Employee> empList = (ArrayList<Employee>) yearMonthlyMap.get(months);
+                    if (empList.size() > 0) {
+                        for (int i = 0; i < empList.size(); i++) {
+                            totalSalary += empList.get(i).getSalary();
+                        }
+                        totalEmployees+= empList.size();
+                    }
                 }
             }
-                if(!(empList.size() == 0))
-                System.out.println(months + "       " + year + "      "+ totalSalary + "      " + empList.size());
-            }
+            else if(year == currentDate.getYear()){
 
+                TreeMap<Month, List<Employee>> yearMonthlyMap = entry.getValue();
+
+                for(int i = 0 ; i < Month.values().length; i++){
+                    if(Month.values()[i].toString().equals(currentDate.getMonth().toString()))
+                    {
+                        ArrayList<Employee> empList = (ArrayList<Employee>) yearMonthlyMap.get(Month.values()[i]);
+                        if (empList.size() > 0) {
+                            for (int j = 0; j < empList.size(); j++) {
+                                totalSalary += empList.get(j).getSalary();
+                            }
+                            totalEmployees+= empList.size();
+                        }
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
         }
 
 
+        System.out.println(currentDate.getMonth() + " " + currentDate.getYear() + " Total Salary "+totalSalary +" EmpCount " + totalEmployees);
+
+        // correct month report
+
+        currentDate.getYear();
+        if(currentDate.getMonth().toString().equals("JANUARY")){
+            currentYear--;
+        }
+
+
+        for(int k = Month.values()[Month.values().length-1].ordinal(); k>=6; k--){
+
+
+            currentMonth = Month.values()[k].toString();
+            totalSalary = 0;
+            totalEmployees =0;
+
+            for (var entry : yearMap.entrySet()) {
+                int year = entry.getKey();
+                if(year < currentYear){
+                    TreeMap<Month, List<Employee>> yearMonthlyMap = entry.getValue();
+                    for(Month months : Month.values()) {
+                        ArrayList<Employee> empList = (ArrayList<Employee>) yearMonthlyMap.get(months);
+                        if (empList.size() > 0) {
+                            for (int i = 0; i < empList.size(); i++) {
+                                totalSalary += empList.get(i).getSalary();
+                            }
+                            totalEmployees+= empList.size();
+                        }
+                    }
+
+
+                }
+                else if(year == currentYear){
+
+                    TreeMap<Month, List<Employee>> yearMonthlyMap = entry.getValue();
+
+                    for(int i = 0 ; i < Month.values().length; i++) {
+                        if(!Month.values()[i].toString().equals(currentMonth))
+                        {
+                            ArrayList<Employee> empList = (ArrayList<Employee>) yearMonthlyMap.get(Month.values()[i]);
+                            if (empList.size() > 0) {
+                                for (int j = 0; j < empList.size(); j++) {
+                                    totalSalary += empList.get(j).getSalary();
+                                }
+                                totalEmployees+= empList.size();
+                            }
+                        }
+                        else {
+
+                            ArrayList<Employee> empList = (ArrayList<Employee>) yearMonthlyMap.get(Month.values()[i]);
+                            if (empList.size() > 0) {
+                                for (int j = 0; j < empList.size(); j++) {
+                                    totalSalary += empList.get(j).getSalary();
+                                }
+                                totalEmployees+= empList.size();
+                            }
+                            break;
+                        }
+                    }
+                }
+
+
+            }
+            System.out.println(currentMonth +" " + currentYear+ " " + " Total Salary "+totalSalary +" EmpCount " + totalEmployees);
+
+        }
+
+        System.out.println("---------------------------------------------------------------------------");
+
+
+
+
+
+
+
+
     }
+
+    public void findMontlySalaryBonusReport() {
+        LocalDate currentDate = LocalDate.now();
+        System.out.println("------------------------------------------------------------------------------------");
+        System.out.println(" Each month (salary + bonus + Reimbursement) information");
+
+
+        int currentYear = currentDate.getYear();
+        String currentMonth = currentDate.getMonth().toString();
+
+        // last 6 months salary details
+
+        int totalSalary = 0;
+        int totalEmployees = 0;
+
+        // current month report
+        for (var entry : yearMap.entrySet()) {
+            int year = entry.getKey();
+            if(year < currentDate.getYear()){
+                TreeMap<Month, List<Employee>> yearMonthlyMap = entry.getValue();
+                for(Month months : Month.values()) {
+                    ArrayList<Employee> empList = (ArrayList<Employee>) yearMonthlyMap.get(months);
+                    if (empList.size() > 0) {
+                        for (int i = 0; i < empList.size(); i++) {
+                            totalSalary += empList.get(i).getSalary() + empList.get(i).getBonus() + empList.get(i).getReimbursement();
+                        }
+                        totalEmployees+= empList.size();
+                    }
+                }
+            }
+            else if(year == currentDate.getYear()){
+
+                TreeMap<Month, List<Employee>> yearMonthlyMap = entry.getValue();
+
+                for(int i = 0 ; i < Month.values().length; i++){
+                    if(Month.values()[i].toString().equals(currentDate.getMonth().toString()))
+                    {
+                        ArrayList<Employee> empList = (ArrayList<Employee>) yearMonthlyMap.get(Month.values()[i]);
+                        if (empList.size() > 0) {
+                            for (int j = 0; j < empList.size(); j++) {
+                                totalSalary += empList.get(j).getSalary() + empList.get(j).getBonus() + empList.get(j).getReimbursement();
+                            }
+                            totalEmployees+= empList.size();
+                        }
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+        }
+
+
+        System.out.println(currentDate.getMonth() + " " + currentDate.getYear() + " Total Salary "+totalSalary +" EmpCount " + totalEmployees);
+
+        // correct month report
+
+        currentDate.getYear();
+        if(currentDate.getMonth().toString().equals("JANUARY")){
+            currentYear--;
+        }
+
+
+        for(int k = Month.values()[Month.values().length-1].ordinal(); k>=6; k--) {
+
+
+            currentMonth = Month.values()[k].toString();
+            totalSalary = 0;
+            totalEmployees = 0;
+
+            for (var entry : yearMap.entrySet()) {
+                int year = entry.getKey();
+                if (year < currentYear) {
+                    TreeMap<Month, List<Employee>> yearMonthlyMap = entry.getValue();
+                    for (Month months : Month.values()) {
+                        ArrayList<Employee> empList = (ArrayList<Employee>) yearMonthlyMap.get(months);
+                        if (empList.size() > 0) {
+                            for (int i = 0; i < empList.size(); i++) {
+                                totalSalary += empList.get(i).getSalary() + empList.get(i).getBonus() + empList.get(i).getReimbursement();
+                            }
+                            totalEmployees += empList.size();
+                        }
+                    }
+
+
+                } else if (year == currentYear) {
+
+                    TreeMap<Month, List<Employee>> yearMonthlyMap = entry.getValue();
+
+                    for (int i = 0; i < Month.values().length; i++) {
+                        if (!Month.values()[i].toString().equals(currentMonth)) {
+                            ArrayList<Employee> empList = (ArrayList<Employee>) yearMonthlyMap.get(Month.values()[i]);
+                            if (empList.size() > 0) {
+                                for (int j = 0; j < empList.size(); j++) {
+                                    totalSalary += empList.get(j).getSalary() + empList.get(j).getBonus() + empList.get(j).getReimbursement();
+                                }
+                                totalEmployees += empList.size();
+                            }
+                        } else {
+
+                            ArrayList<Employee> empList = (ArrayList<Employee>) yearMonthlyMap.get(Month.values()[i]);
+                            if (empList.size() > 0) {
+                                for (int j = 0; j < empList.size(); j++) {
+                                    totalSalary += empList.get(j).getSalary();
+                                }
+                                totalEmployees += empList.size();
+                            }
+                            break;
+                        }
+                    }
+                }
+
+
+            }
+            System.out.println(currentMonth + " " + currentYear + " " + " Total Salary " + totalSalary + " EmpCount " + totalEmployees);
+        }
+        System.out.println("---------------------------------------------------------------------------");
+
+    }
+
+
+    public void yearlyEventRecords() {
+        System.out.println("------------------------------Yearly Event financial report--------------------------------");
+        System.out.println("Year" + "   " + "Event" + "   " + " EmpId" + "   " + "EventDate" + "   " + "EventValue");
+        for (var entry : yearMap.entrySet()) {
+            int year = entry.getKey();
+            TreeMap<Month, List<Employee>> yearMonthlyMap = entry.getValue();
+            for (Month months : Month.values()) {
+                ArrayList<Employee> empList = (ArrayList<Employee>) yearMonthlyMap.get(months);
+                if (empList.size() > 0) {
+                    for (int i = 0; i < empList.size(); i++) {
+
+                        System.out.println(year + "  " + empList.get(i).getEvent() + " "
+                                + empList.get(i).getEmployeeId() + " " + empList.get(i).getEventRecordDate() + " "
+                                + empList.get(i).getEventRecordValue());
+                    }
+                }
+            }
+        }
+    }
+
 }

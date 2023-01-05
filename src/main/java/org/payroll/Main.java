@@ -13,7 +13,6 @@ public class Main {
         File inFile = null;
         if(args.length>0) {
 
-            String[] splited = null;
             inFile = new File(args[0]);
 
             try {
@@ -27,9 +26,7 @@ public class Main {
                     data[0] = read;
 
                     empCont.addEmp(data);
-//                    for (String part : data) {
-//                        System.out.println(part);
-//                    }
+
                 }
                 // o/p 1
                 empCont.totalEmployees();
@@ -37,6 +34,8 @@ public class Main {
                 empCont.employeeWiseFinancialReport();
                 empCont.findAllOnBoarded();
                 empCont.monthlySalaryReport();
+                empCont.monthlySalaryBonusReport();
+                empCont.yearlyEventRecords();
 
 
             } catch (IOException e) {
