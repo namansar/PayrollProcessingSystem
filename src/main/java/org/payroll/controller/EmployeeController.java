@@ -91,7 +91,7 @@ public class EmployeeController {
 
     // output point 1
     public int totalEmployees() {
-        return employeeService.TotalEmployees();
+        return employeeService.totalEmployees();
     }
 
     public List<Employee> findAllDeatils(){
@@ -125,6 +125,10 @@ public class EmployeeController {
 
     public void yearlyEventRecords() {
         employeeService.yearlyEventRecords();
+    }
+
+    public void exitEmployeeDetails() {
+        employeeService.showExitEmployeeDetails();
     }
 
 }

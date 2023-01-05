@@ -28,22 +28,27 @@ public class Main {
                     empCont.addEmp(data);
 
                 }
-                // o/p 1
-                empCont.totalEmployees();
-                empCont.findAllDeatils();
-                empCont.employeeWiseFinancialReport();
-                empCont.findAllOnBoarded();
-                empCont.monthlySalaryReport();
-                empCont.monthlySalaryBonusReport();
-                empCont.yearlyEventRecords();
 
+
+                // output methods to output records and reports on console
+
+                empCont.totalEmployees();
+                //empCont.findAllDeatils();
+                empCont.employeeWiseFinancialReport();
+
+                empCont.findAllOnBoarded();
+
+                empCont.monthlySalaryReport();
+
+                empCont.monthlySalaryBonusReport();
+
+                empCont.yearlyEventRecords();
 
             } catch (IOException e) {
                 System.out.println("There was a problem: " + e);
             }
 
     }
-
     }
 
 }

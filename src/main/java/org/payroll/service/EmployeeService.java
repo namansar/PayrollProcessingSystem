@@ -7,35 +7,23 @@ import org.payroll.utility.Month;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.stream.Stream;
 
 public class EmployeeService {
 
-    private TreeMap<String, Employee> hm = new TreeMap<>();
-    // exit Employees map
+    private TreeMap<String, Employee> employeeMap = new TreeMap<>();
     private TreeMap<String, Employee> exitEmployees = new TreeMap<>();
-
-
     private TreeMap<Month,List<Employee>> monthMap = new TreeMap<>();
     private TreeMap<Integer,TreeMap<Month,List<Employee>>> yearMap = new TreeMap<Integer, TreeMap<Month, List<Employee>>>();
-
     ArrayList<ArrayList<Employee>> monthList = new ArrayList<ArrayList<Employee>>();
-
-    //TreeMap<Month, List<Employee>> currentYearMap;
-    
 
 
     //TODO remove this treeMap and convert to arraylist
     private TreeMap<Date, Employee> monthlyDetails = new TreeMap<>(new Comparator<Date>() {
         public int compare(Date date1, Date date2) {
-//            System.out.println("Date1" + date1 + " Date2" + date2);
-//            System.out.println(date1.compareTo(date2));
             return date1.compareTo(date2);
-
         }
     });
 
-    //private ArrayList<Employee>
     // TODO add in utility
     public static LocalDate convert (Date date) {
         return date.toInstant()
@@ -44,21 +32,13 @@ public class EmployeeService {
     }
 
     public void addEmployee(String empId, Employee e) {
-        //System.out.println("employee to be added in hm ->" + e.getEmployeeId() + " " + e.getDesignation() + " " + e.getEmpFName());
-        hm.put(empId, e);
+        employeeMap.put(empId, e);
         //TODO remove treemap monthlyDetails
         Date onBoard = e.getEventDate();
         monthlyDetails.put(onBoard, e);
-
-        //DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-
         LocalDate localDate = convert(onBoard);
         int month = localDate.getMonthValue();
         int year = localDate.getYear();
-
-//        System.out.println("Month -->" + month);
-//        System.out.println("Year -->" + year);
-
         // year map logic
 
         if(!yearMap.containsKey(year)){
@@ -69,7 +49,6 @@ public class EmployeeService {
                 for(int i= 0; i < 12; i++) {
                     yearWiseMonthList.add(new ArrayList<>());
                 }
-
 
             }
 
@@ -132,12 +111,10 @@ public class EmployeeService {
                     break;
 
             }
-
-
             yearMap.put(year,yearlyMonthMap);
-            //System.out.println(yearMap.get(year).get(Month.NOVEMBER));
 
         }
+
         else {
             TreeMap<Month, List<Employee>> currentYearMap =  yearMap.get(year);
             System.out.println(Month.values()[month-1]);
@@ -147,16 +124,7 @@ public class EmployeeService {
             currentYearMap.put(Month.values()[month-1],currentMonthList);
             yearMap.put(year,currentYearMap);
 
-
-
-
         }
-
-
-
-
-
-
         // year map logic end here
 
 
@@ -164,7 +132,6 @@ public class EmployeeService {
             for(int i= 0; i < 12; i++) {
                 monthList.add(new ArrayList<>());
             }
-
         }
 
         switch (month){
@@ -224,35 +191,35 @@ public class EmployeeService {
     }
 
 
-    public int TotalEmployees() {
+    public int totalEmployees() {
         System.out.println("----------------------------------------");
-        System.out.println("Total number of employees is:" + hm.size());
+        System.out.println("Total number of employees is:" + employeeMap.size());
         System.out.println("------------------------------------------");
-        return hm.size();
+        return employeeMap.size();
 
     }
 
     public List<Employee> findAll() {
-        List<Employee> listRecords = new ArrayList<>(hm.values());
+        System.out.println("-------------------------------------------------");
+        List<Employee> listRecords = new ArrayList<>(employeeMap.values());
         for (int i = 0; i < listRecords.size(); i++) {
             System.out.println(listRecords.get(i).getDesignation() + "," + listRecords.get(i).getEmpFName());
 
         }
+        System.out.println("-------------------------------------------------");
         return listRecords;
     }
 
     public Employee findByEmpId(String id) {
-        return hm.get(id);
+        return employeeMap.get(id);
     }
-
 
     public void printEmployeeFinancialReport() {
 
         //TotalAmountPaid = e.getsalary()*12 + e.getBonus() + reimbursment
-
         System.out.println("----------------------------------------------------------------");
         System.out.println("Employee Id, Name, Surname, Total amount paid");
-        for (var entry : hm.entrySet()) {
+        for (var entry : employeeMap.entrySet()) {
             int totalpaid = 0;
             if (entry.getValue().getSalary() != null) {
                 totalpaid = entry.getValue().getSalary() * 12 + entry.getValue().getBonus()
@@ -301,53 +268,30 @@ public class EmployeeService {
     }
 
     public void updateSalaryOfEmployee(String employeeId, Employee e) {
-        hm.put(employeeId, e);
+        employeeMap.put(employeeId, e);
     }
 
     public void updateBonusOfEmployee(String employeeId, Employee e) {
-        hm.put(employeeId, e);
+        employeeMap.put(employeeId, e);
     }
 
     public void updateReimbursementOfEmployee(String employeeId, Employee e) {
-        hm.put(employeeId, e);
+        employeeMap.put(employeeId, e);
     }
 
     public void removeEmployee(String empId) {
         //TODO delete employee from montlyMap as well , create exit employeeMap
         Employee e = findByEmpId(empId);
         exitEmployees.put(empId,e);
-        hm.remove(empId);
+        employeeMap.remove(empId);
     }
 
     public void findMontlySalaryReport() {
-
-        // Month, Total Salary, Total employees
-//        System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-//        System.out.println("Month,   Year,     Total Salary,    Total employees");
-//        for (var entry : yearMap.entrySet()) {
-//            int year = entry.getKey();
-//            TreeMap<Month, List<Employee>> yearMonthlyMap = entry.getValue();
-//            for(Month months : Month.values()){
-//                ArrayList<Employee> empList= (ArrayList<Employee>) yearMonthlyMap.get(months);
-//                int totalSalary = 0;
-//            if(empList.size() > 0) {
-//                for(int i = 0; i < empList.size(); i++){
-//                    totalSalary+= empList.get(i).getSalary();
-//                }
-//            }
-//                if(!(empList.size() == 0))
-//                System.out.println(months + "       " + year + "      "+ totalSalary + "      " + empList.size());
-//            }
-//
-//        }
-
-
         // last 6 months
 
-        LocalDate currentDate = LocalDate.now();
         System.out.println("------------------------------------------------------------------------------------");
+        LocalDate currentDate = LocalDate.now();
         System.out.println(" Each month salary information");
-
 
         int currentYear = currentDate.getYear();
         String currentMonth = currentDate.getMonth().toString();
@@ -466,12 +410,6 @@ public class EmployeeService {
         System.out.println("---------------------------------------------------------------------------");
 
 
-
-
-
-
-
-
     }
 
     public void findMontlySalaryBonusReport() {
@@ -479,16 +417,14 @@ public class EmployeeService {
         System.out.println("------------------------------------------------------------------------------------");
         System.out.println(" Each month (salary + bonus + Reimbursement) information");
 
-
         int currentYear = currentDate.getYear();
         String currentMonth = currentDate.getMonth().toString();
-
         // last 6 months salary details
 
         int totalSalary = 0;
         int totalEmployees = 0;
-
         // current month report
+
         for (var entry : yearMap.entrySet()) {
             int year = entry.getKey();
             if(year < currentDate.getYear()){
@@ -527,7 +463,6 @@ public class EmployeeService {
 
 
         System.out.println(currentDate.getMonth() + " " + currentDate.getYear() + " Total Salary "+totalSalary +" EmpCount " + totalEmployees);
-
         // correct month report
 
         currentDate.getYear();
@@ -614,4 +549,8 @@ public class EmployeeService {
         }
     }
 
+
+    public void showExitEmployeeDetails() {
+     //   exitEmployees.
+    }
 }
