@@ -3,68 +3,70 @@ package PayrollProcessingTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+import org.payroll.controller.EmployeeController;
 import org.payroll.entity.Employee;
 import org.payroll.service.EmployeeService;
-import org.payroll.utility.Month;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
-
-import static org.mockito.Mockito.when;
-
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.util.Date;
 
 public class PayrollProcessingTest {
 
-    @Mock
-    EmployeeService employeeService;
-
-    @Mock
-    TreeMap<String, Employee> employeeMap ;
-
-    @Mock
-    TreeMap<String, Employee> exitEmployees;
-
-    @Mock
-    TreeMap<Month, List<Employee>> monthMap;
-
-    @Mock
-    TreeMap<Integer,TreeMap<Month,List<Employee>>> yearMap ;
-
-    @Mock
-    ArrayList<ArrayList<Employee>> monthList;
-
-    @Mock
-    Employee e;
-
+    private final PrintStream standardOut =System.out;
+    private final ByteArrayOutputStream outputStreamCaptor=new ByteArrayOutputStream();
 
     @BeforeEach
-    public void configuration() {
-        Employee e = new Employee();
-        e.setSequenceNo(1);
-
-
+    public void setUp() {
+        System.setOut(new PrintStream(outputStreamCaptor));
     }
 
     @Test
-    public void addEmployee()
-    {
+    public void totalEmployeeTest() {
 
-    }
+        Date eventDate=new Date(01-11-2023);
+        EmployeeService es=new EmployeeService();
+        Employee e=new Employee();
+        e.setEmployeeId("emp101");
+        e.setEmpFName("Bill");
+        e.setEvent("ONBOARD");
+        e.setEventDate(eventDate);
+        e.setEmpLName("Gates");
+        es.addEmployee(e.getEmployeeId(),e);
+        EmployeeController emp=new EmployeeController();
+        emp.setEmployeeService(es);
+        emp.totalEmployees();
+        String expectedoutput="Total number of employees is:1";
+
+        Assertions.assertEquals(expectedoutput, outputStreamCaptor.toString().trim());
+
+}
 
     @Test
-    public void employeeServiceTotalEmployeeTest(){
+    public void employeeWiseFinancialReportTest() {
+        Date eventDate=new Date(01-11-2023);
 
-        when(employeeService.totalEmployees()).thenReturn(0);
+        EmployeeService es=new EmployeeService();
+        Employee e=new Employee();
+        e.setEmployeeId("emp101");
+        e.setEmpFName("Bill");
+        e.setEvent("ONBOARD");
+        e.setEventDate(eventDate);
+        e.setEmpLName("Gates");
+        es.addEmployee(e.getEmployeeId(),e);
+        EmployeeController emp=new EmployeeController();
 
-        int employeeCount = employeeService.totalEmployees();
+        emp.setEmployeeService(es);
+        emp.employeeWiseFinancialReport();
 
-        int expectedOutput = 0;
+        String expectedoutput="----------------------------------------------------------------\n"
+                + "Employee Id, Name, Surname, Total amount paid\n"
+                + "emp101 Bill Gates 0\n"
+                + "----------------------------------------------------------------";
 
-        Assertions.assertEquals(employeeCount, expectedOutput);
-
-
-
+        Assertions.assertEquals(expectedoutput, outputStreamCaptor.toString().trim());
     }
+
+
+
 }

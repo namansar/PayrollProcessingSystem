@@ -12,6 +12,10 @@ import java.util.List;
 public class EmployeeController {
     private EmployeeService employeeService = new EmployeeService();
 
+    public void setEmployeeService(EmployeeService employeeService) {
+        this.employeeService = employeeService;
+    }
+
     public void addEmp(String[] empinfo) {
         Employee emp=new Employee();
         Event ev=new Event();
@@ -33,12 +37,9 @@ public class EmployeeController {
                 emp.setEmpFName(singlerecord[2]);
                 emp.setEmpLName(singlerecord[3]);
                 emp.setDesignation(singlerecord[4]);
-                //emp.setEventDate(date1);
-                //
                 emp.setEventRecordDate(singlerecord[7]);
                 emp.setEventRecordValue(singlerecord[6]);
                 emp.setEvent(singlerecord[5]);
-                //
                 ev.setEvent(singlerecord[5]);
                 ev.setEventValue(singlerecord[6]);
                 ev.setNotes((singlerecord[8]));
@@ -94,13 +95,12 @@ public class EmployeeController {
         return employeeService.totalEmployees();
     }
 
-    public List<Employee> findAllDeatils(){
+    public List<Employee> findAllDeatilsOfEmployees(){
         return employeeService.findAll();
     }
 
     // Output point 4
     public void employeeWiseFinancialReport(){
-//      TotalAmountPaid = e.getsalary()*12 + e.getBonus() + reimbursment
         employeeService.printEmployeeFinancialReport();
     }
 

@@ -32,8 +32,11 @@ public class Main {
 
                 // output methods to output records and reports on console
 
+                // total employees
                 empCont.totalEmployees();
+
                 //empCont.findAllDeatils();
+
                 empCont.employeeWiseFinancialReport();
 
                 empCont.findAllOnBoarded();
